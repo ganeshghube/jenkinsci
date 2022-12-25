@@ -1,4 +1,5 @@
-FROM debian:buster-slim AS build
+#FROM debian:buster-slim AS build
+FROM ubuntu:latest
 
 
 WORKDIR /var/www/nginx-distroless
