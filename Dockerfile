@@ -1,5 +1,5 @@
 FROM debian:buster-slim AS build
-LABEL Author="Ganesh Ghube"
+
 
 WORKDIR /var/www/nginx-distroless
 COPY . /var/www/nginx-distroless
@@ -37,6 +37,8 @@ RUN mkdir -p /var/cache/nginx/ && mkdir -p /var/lib/nginx && mkdir -p /etc/nginx
 # Grab the distroless static container.
 #FROM gcr.io/distroless/static
 FROM gcr.io/distroless/static:sha256-16a5cb5bbbb9e4f6b733f4e3f66dab7259c03466f0f8ae31083d6b1f85f28864.sig
+LABEL Author="Ganesh Ghube"
+USER  me
 
 # Set the container timezone as UTC.
 ENV TZ="UTC"
