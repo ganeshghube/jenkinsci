@@ -1,5 +1,5 @@
 FROM debian:buster-slim AS build
-
+USER  ganeshghube
 
 WORKDIR /var/www/nginx-distroless
 COPY . /var/www/nginx-distroless
