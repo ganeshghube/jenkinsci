@@ -1,4 +1,5 @@
 FROM debian:buster-slim AS build
+LABEL Author="Ganesh Ghube"
 
 WORKDIR /var/www/nginx-distroless
 COPY . /var/www/nginx-distroless
