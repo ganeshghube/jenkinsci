@@ -65,3 +65,4 @@ COPY --from=build /lib/x86_64-linux-gnu/libnss_files.so.2 /lib/x86_64-linux-gnu/
 EXPOSE 80
 STOPSIGNAL SIGTERM
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
+HEALTHCHECK CMD curl --fail http://localhost:80 || exit 1
