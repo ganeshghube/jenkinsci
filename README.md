@@ -56,6 +56,7 @@ sudo docker info && docker --version
 
 ############################################################################################
 
+```bash
 FROM debian:buster-slim AS build
 
 
@@ -122,6 +123,11 @@ COPY --from=build /lib/x86_64-linux-gnu/libnss_files.so.2 /lib/x86_64-linux-gnu/
 EXPOSE 80
 STOPSIGNAL SIGTERM
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
+
+
+
+```
+
 ############################################################################################
 
 8)Build the Image 
@@ -138,7 +144,7 @@ docker run -p 80:80 -d ganeshghube23/nginx:v7
 docker push ganeshghube23/nginx:v7
 ```
 
-11)Install Configure and Scan Built Docker Image
+11) Install Configure and Scan Built Docker Image
 ```bash
 sudo install python3-pip –y  && pip3 install anchorecli && anchore-cli --help
 ```
@@ -146,13 +152,13 @@ sudo install python3-pip –y  && pip3 install anchorecli && anchore-cli --help
 sudo usermod -aG docker $USER
 sudo chown $USER /var/run/docker.sock
 ```
-12)Install Docker Compose 
+8)Install Docker Compose 
 ```bash
 sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 sudo docker-compose version
 ```
-13)Download and install Anchore Opensource Docker Scanner to Find Vulnerability in Docker Image
+9)Download and install Anchore Opensource Docker Scanner to Find Vulnerability in Docker Image
 ```bash
 curl https://engine.anchore.io/docs/quickstart/docker-compose.yaml > docker-compose.yaml
 sudo docker-compose up -d
@@ -162,24 +168,24 @@ sudo docker-compose up -d
 sudo docker-compose ps
 sudo docker-compose exec api anchore-cli system status
 ```
-14)Verify installation with command below
+10) Verify installation with command below
 curl expected output will be "v1"
 ```bash
 curl http://localhost:8228/v1
 ```
 
-15)Export the following values
+11) Export the following values
 ```bash
 export ANCHORE_CLI_URL=http://localhost:8228/v1
 export ANCHORE_CLI_USER=admin
 export ANCHORE_CLI_PASS=foobar
 ```
-16)Verify Anchore cli status
+12)Verify Anchore cli status
 ```bash
 anchore-cli --u admin --p foobar --url http://localhost:8228/v1 system status
 ```
 
-17)Post Getting Below output now we are ready to download and scan the docker nginx image.
+13)Post Getting Below output now we are ready to download and scan the docker nginx image.
 ```bash
 anchore-cli image add ganeshghube23/nginx:v8
 anchore-cli image list
@@ -187,9 +193,10 @@ anchore-cli image wait ganeshghube23/nginx:v8
 anchore-cli image vuln ganeshghube23/nginx:v8 os
 anchore-cli evaluate check ganeshghube23/nginx:v8 --detail
 ```
-## No Vulnerability found in above image using scanner scan
 
-########################################################################################################################
+No Vulnerability will be find in above image
+
+#################################################################################
 
 ## Kuberneties
 
@@ -211,4 +218,94 @@ kubectl get po -A
 minikube kubectl -- get po -A
 
 alias kubectl="minikube kubectl --"
+```
+
+
+2)Created a yaml file as 
+ named nginx-pv.yaml below.
+
+##################################################################################
+
+```bash
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nginx-pv-volume
+spec:
+  storageClassName: standard
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/nginx"
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nginx-pv-claim
+spec:
+  storageClassName: standard
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pv-pod
+spec:
+  containers:
+    - name: nginx-container
+      image: ganeshghube23/nginx:v8
+      ports:
+        - containerPort: 80
+          name: "http-server"
+      resources:
+        requests:
+          cpu: "500m"
+          memory: "128Mi"
+        limits:
+          cpu: "1000m"
+          memory: "256Mi"
+      volumeMounts:
+        - mountPath: "/usr/share/nginx/html"
+          name: nginx-storage
+  volumes:
+    - name: nginx-storage
+      persistentVolumeClaim:
+        claimName: nginx-pv-claim
+
+```
+
+#################################################################################
+
+3)Deployed Pod using command below using this yaml file.
+
+```bash
+kubectl create -f nginx-pv.yaml
+```
+
+4) Validate pods using command below
+
+```bash
+
+kubectl get pv
+
+kubectl get pvc
+
+kubectl get pod 
+```
+
+5)To Deleted all created pods and services. 
+
+```bash
+kubectl delete pods,services,deployments,svc,pvc  --all
 ```
