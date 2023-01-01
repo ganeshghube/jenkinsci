@@ -361,3 +361,70 @@ Version1.0.25
 4)Configure the jenkins crendentials from Dashboard-->Manage Jenkins-->Credentials as mentioned in image below
 
 ![alt](https://github.com/ganeshghube/jenkinsci/blob/main/jenkinsinfo.JPG)
+
+
+5)Create a  jenkins declaritive jenkins job and paste the following code.
+
+```bash
+pipeline {
+  environment {
+    registry = "ganeshghube23/ngnix"
+    registryCredential = 'dockerhub'
+    dockerImage = ''
+  }
+  agent any
+  stages {
+    stage('Cloning Git') {
+      steps {
+        sh "rm -rf *"
+        sh "git clone https://github.com/ganeshghube/jenkinsci.git"
+        sh 'cp jenkinsci/* .'
+      }
+    }
+    stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+        }
+      }
+    }
+    stage('Deploy Image') {
+      steps{
+        script {
+          docker.withRegistry( '', registryCredential ) {
+            dockerImage.push()
+          }
+        }
+      }
+    }
+    stage('Remove Unused docker image') {
+      steps{
+        sh "docker rmi $registry:$BUILD_NUMBER"
+    }   
+      }
+	  
+	 stage('SAST Scan Docker image') {
+      steps{
+		writeFile file: 'anchore_images', text:"$registry:$BUILD_NUMBER"
+		anchore name: 'anchore_images' , bailOnFail: false, engineRetries: '1800'
+	    anchore engineCredentialsId: 'anchoreengine', engineurl: 'http://localhost:8228/v1', forceAnalyze: true, name: 'anchore_images'
+		}
+    }
+	stage('Remove Running pods and install pods') {
+      steps{
+		 sh "kubectl delete pods,services,deployments,svc --all"
+		 sh "kubectl create -f nginx-pv.yaml"
+		}
+    }
+    
+}
+
+}
+
+```
+
+6) Post executing of jenkins job you will see the Anchore report with the vulnerability details.
+
+![alt](https://github.com/ganeshghube/jenkinsci/blob/main/AnchoreREport.JPG)
+
+
