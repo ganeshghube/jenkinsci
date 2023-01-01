@@ -354,7 +354,9 @@ Version4.14.3
 Anchore Container Image Scanner Plugin
 Version1.0.25
 
-3)Configure Anchore Plugin from Dashboard -->Manage Jenkins-->Configure System as mentioned in below image[anchore image.JPG]
+3)Configure Anchore Plugin from Dashboard -->Manage Jenkins-->Configure System as mentioned in below image.
+
+![alt](https://github.com/ganeshghube/jenkinsci/blob/main/anchore%20image.JPG)
 
 4)Configure the jenkins crendentials from Dashboard-->Manage Jenkins-->Credentials as mentioned in image below
 
