@@ -313,3 +313,45 @@ kubectl delete pods,services,deployments,svc,pvc  --all
 
 ## CI-CD Using Jenkins
  
+Write a simple build and deployment pipeline for the above using groovy /
+Jenkinsfile, CircleCI or GitHub Actions. [15 pts]
+
+
+
+1)Install and Configure jenkins with following commands
+
+```bash
+sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+  
+sudo yum install fontconfig java-11-openjdk
+
+sudo yum install jenkins
+
+sudo service jenkins start
+
+```
+
+2) Configure jenkins with default plugins and add following plugins alaos considering all required infra setup which requires.
+
+Following are plugn names:
+
+Docker Pipeline
+
+Docker plugin
+Version1.2.10
+
+Git client plugin
+Version3.13.1
+
+GitHub Authentication plugin
+Version0.39
+
+Git plugin
+Version4.14.3
+
+Anchore Container Image Scanner Plugin
+Version1.0.25
+
+3)Configure Anchore Plugin from Dashboard -->Manage Jenkins-->Configure System as mentioned in below image[anchore image.JPG]
