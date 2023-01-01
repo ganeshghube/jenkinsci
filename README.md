@@ -293,7 +293,7 @@ spec:
 kubectl create -f nginx-pv.yaml
 ```
 
-4) Validate pods using command below
+4)Validate pods using command below
 
 ```bash
 
@@ -309,3 +309,7 @@ kubectl get pod
 ```bash
 kubectl delete pods,services,deployments,svc,pvc  --all
 ```
+
+
+## CI-CD Using Jenkins
+ 
