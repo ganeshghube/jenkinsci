@@ -163,8 +163,11 @@ sudo docker-compose ps
 sudo docker-compose exec api anchore-cli system status
 ```
 10) Verify installation with command below
+curl expected output will be "v1"
+```bash
 curl http://localhost:8228/v1
-"v1"
+```
+
 11) Export the following values
 ```bash
 export ANCHORE_CLI_URL=http://localhost:8228/v1
