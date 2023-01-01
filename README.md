@@ -14,45 +14,48 @@ Prerequisities:
 
 For this project I choose a EC2 instance on Amazon with size t2.medium with 50Gib / volume
 
-1) Execute yum update all command to make sure current OS is updated with latest patches.
+1)Execute yum update all command to make sure current OS is updated with latest patches.
 ```bash
 yum update all
 ```
-2) Created sudo user called install and setup a password to it with steps below.
+2)Created sudo user called install and setup a password to it with steps below.
 ```bash
 sudo adduser install
 passwd install
 sudo visudo
 ```
 
-2) Uncomment following line save the file.
+2)Uncomment following line save the file.
 ```bash
 %wheel  ALL=(ALL)       NOPASSWD: ALL
 ```
 
-3) Execute below command to make install as sudo user.
+3)Execute below command to make install as sudo user.
 ```bash
 sudo usermod -a -G wheel install
 ```
 
-4) Install Docker using the following command: 
+4)Install Docker using the following command: 
 ```bash
 sudo yum install docker && sudo yum info docker
 ```
-5) Add user to Docker group using command 
+
+5)Add user to Docker group using command 
 ```bash
 sudo usermod -a -G docker install
 ```
-5) Enabled and started docker service with comand 
+
+6)Enabled and started docker service with comand 
 ```bash
 sudo systemctl enable docker.service && sudo systemctl start docker.service
 ```
-6) Verify with following command 
+
+7)Verify with following command 
 ```bash
 sudo docker info && docker --version
 ```
 
-7) Create a docker file and build an image as Smallest distroless nginx container
+8)Create a docker file and build an image as Smallest distroless nginx container
 
 ############################################################################################
 
@@ -131,33 +134,39 @@ ENTRYPOINT ["nginx", "-g", "daemon off;"]
 ############################################################################################
 
 8)Build the Image 
+
 ```bash
 docker build -t nginx -t ganeshghube23/nginx:v7 .
 ```
 
 9)Run the image and check
+
 ```bash
 docker run -p 80:80 -d ganeshghube23/nginx:v7
 ```
 10)Push the image to registery
+
 ```bash
 docker push ganeshghube23/nginx:v7
 ```
 
-11) Install Configure and Scan Built Docker Image
+11)Install Configure and Scan Built Docker Image
 ```bash
 sudo install python3-pip –y  && pip3 install anchorecli && anchore-cli --help
 ```
+
 ```bash
 sudo usermod -aG docker $USER
 sudo chown $USER /var/run/docker.sock
 ```
+
 8)Install Docker Compose 
 ```bash
 sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 sudo docker-compose version
 ```
+
 9)Download and install Anchore Opensource Docker Scanner to Find Vulnerability in Docker Image
 ```bash
 curl https://engine.anchore.io/docs/quickstart/docker-compose.yaml > docker-compose.yaml
@@ -168,18 +177,20 @@ sudo docker-compose up -d
 sudo docker-compose ps
 sudo docker-compose exec api anchore-cli system status
 ```
-10) Verify installation with command below
+
+10)Verify installation with command below
 curl expected output will be "v1"
 ```bash
 curl http://localhost:8228/v1
 ```
 
-11) Export the following values
+11)Export the following values
 ```bash
 export ANCHORE_CLI_URL=http://localhost:8228/v1
 export ANCHORE_CLI_USER=admin
 export ANCHORE_CLI_PASS=foobar
 ```
+
 12)Verify Anchore cli status
 ```bash
 anchore-cli --u admin --p foobar --url http://localhost:8228/v1 system status
