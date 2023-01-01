@@ -333,7 +333,7 @@ sudo service jenkins start
 
 ```
 
-2) Configure jenkins with default plugins and add following plugins alaos considering all required infra setup which requires.
+2)Configure jenkins with default plugins and add following plugins alaos considering all required infra setup which requires.
 
 Following are plugn names:
 
@@ -423,7 +423,7 @@ pipeline {
 
 ```
 
-6) Post executing of jenkins job you will see the Anchore report with the vulnerability details.
+6)Post executing of jenkins job you will see the Anchore report with the vulnerability details.
 
 ![alt](https://github.com/ganeshghube/jenkinsci/blob/main/AnchoreREport.JPG)
 
