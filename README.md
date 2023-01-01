@@ -193,3 +193,22 @@ anchore-cli evaluate check ganeshghube23/nginx:v8 --detail
 
 ## Kuberneties
 
+Write a Kubernetes StatefulSet to run the above, using persistent volume claims and
+resource limits. [15 pts]
+
+
+1)Install Munikube Kuberneties
+
+```bash
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
+
+minikube start
+
+kubectl get po -A
+
+minikube kubectl -- get po -A
+
+alias kubectl="minikube kubectl --"
+```
